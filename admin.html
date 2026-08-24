@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VAPEhyz shop — Админ-панель</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        /* ========== БАЗОВЫЕ СТИЛИ ========== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --bg: var(--tg-theme-bg-color, #0a0a0a);
+            --text: var(--tg-theme-text-color, #ffffff);
+            --hint: var(--tg-theme-hint-color, #888);
+            --secondary: var(--tg-theme-secondary-bg-color, #161616);
+            --green: #4CAF50;
+            --green-dark: #2E7D32;
+            --red: #f44336;
+            --blue: #2196F3;
+            --orange: #FF9800;
+            --radius: 12px;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding: 16px;
+            padding-bottom: 80px;
+            min-height: 100vh;
+        }
+        
+        /* ========== ШАПКА ========== */
+        .header {
+            text-align: center;
+            padding: 16px 0 20px;
+            border-bottom: 1px solid var(--hint);
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--green);
+        }
+        .header p {
+            font-size: 14px;
+            color: var(--hint);
+            margin-top: 4px;
+        }
+        
+        /* ========== СТАТИСТИКА ========== */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: var(--secondary);
+            padding: 12px;
+            border-radius: var(--radius);
+            text-align: center;
+            border: 1px solid var(--hint);
+        }
+        .stat-card .number {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--green);
+        }
+        .stat-card .label {
+            font-size: 11px;
+            color: var(--hint);
+            margin-top: 4px;
+        }
+        
+        /* ========== ВКЛАДКИ ========== */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            background: var(--secondary);
+            color: var(--hint);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .3s;
+        }
+        .tab-btn.active {
+            background: var(--green);
+            color: #fff;
+        }
+        .tab-btn:active { transform: scale(.95); }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        /* ========== КАРТОЧКА ТОВАРА ========== */
+        .product-card {
+            background: var(--secondary);
+            border-radius: var(--radius);
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid var(--hint);
+        }
+        .product-card .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .product-card .name {
+            font-size: 16px;
+            font-weight: 600;
+        }
+        .product-card .price {
+            color: var(--green);
+            font-weight: 700;
+        }
+        .product-card .desc {
+            font-size: 12px;
+            color: var(--hint);
+            margin: 4px 0;
+        }
+        .product-card .preview-img {
+            max-width: 60px;
+            max-height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-top: 4px;
+        }
+        .product-card .available-badge {
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        .product-card .available-badge.in-stock { color: var(--green); }
+        .product-card .available-badge.out-of-stock { color: var(--red); }
+        
+        /* ========== ВАРИАНТЫ ========== */
+        .variants-section {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--hint);
+        }
+        .variants-section .variant-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--orange);
+            margin-bottom: 6px;
+        }
+        .variant-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg);
+            padding: 4px 10px;
+            border-radius: 6px;
+            margin-bottom: 4px;
+            font-size: 13px;
+        }
+        .variant-item .remove-variant {
+            background: var(--red);
+            border: none;
+            color: #fff;
+            padding: 2px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .variant-item .remove-variant:active { transform: scale(.9); }
+        
+        .add-variant-form {
+            display: flex;
+            gap: 6px;
+            margin-top: 6px;
+            flex-wrap: wrap;
+        }
+        .add-variant-form input {
+            flex: 1;
+            min-width: 80px;
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--hint);
+            background: var(--bg);
+            color: var(--text);
+            font-size: 13px;
+        }
+        .add-variant-form button {
+            padding: 6px 14px;
+            background: var(--green);
+            border: none;
+            border-radius: 6px;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .add-variant-form button:active { transform: scale(.95); }
+        
+        /* ========== ДЕЙСТВИЯ С ТОВАРОМ ========== */
+        .product-card .actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+        .product-card .actions button {
+            padding: 6px 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .2s;
+        }
+        .product-card .actions button:active { transform: scale(.95); }
+        .btn-toggle { background: var(--orange); color: #fff; }
+        .btn-edit { background: var(--blue); color: #fff; }
+        .btn-delete { background: var(--red); color: #fff; }
+        
+        .btn-add {
+            width: 100%;
+            padding: 14px;
+            background: var(--green);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 16px;
+        }
+        .btn-add:active { transform: scale(.95); }
+        
+        /* ========== МОДАЛЬНОЕ ОКНО ========== */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 100;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .modal-content {
+            background: var(--bg);
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 500px;
+            margin: 20px auto;
+            border: 1px solid var(--hint);
+        }
+        .modal-content h2 { margin-bottom: 16px; }
+        .modal-content input,
+        .modal-content textarea,
+        .modal-content select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--hint);
+            background: var(--secondary);
+            color: var(--text);
+            font-size: 14px;
+        }
+        .modal-content textarea { min-height: 60px; resize: vertical; }
+        
+        .file-input-wrapper {
+            position: relative;
+            margin-bottom: 10px;
+        }
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+        .file-input-wrapper .file-label {
+            display: block;
+            padding: 12px;
+            border: 2px dashed var(--hint);
+            border-radius: 8px;
+            text-align: center;
+            color: var(--hint);
+            cursor: pointer;
+            transition: all .3s;
+        }
+        .file-input-wrapper .file-label.has-file {
+            border-color: var(--green);
+            color: var(--green);
+        }
+        .file-input-wrapper .file-label img {
+            max-width: 100%;
+            max-height: 100px;
+            border-radius: 8px;
+            margin-top: 8px;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .modal-actions button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all .2s;
+        }
+        .modal-actions button:active { transform: scale(.96); }
+        .modal-actions .save-btn { background: var(--green); color: #fff; }
+        .modal-actions .cancel-btn { background: #333; color: #fff; }
+        
+        /* ========== ЗАКАЗЫ ========== */
+        .order-card {
+            background: var(--secondary);
+            border-radius: var(--radius);
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid var(--hint);
+        }
+        .order-card .order-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .order-card .order-user { font-weight: 600; }
+        .order-card .order-total { color: var(--green); font-weight: 700; }
+        .order-card .order-status {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .order-card .order-status.new { background: rgba(33,150,243,.2); color: var(--blue); }
+        .order-card .order-status.confirmed { background: rgba(76,175,80,.2); color: var(--green); }
+        .order-card .order-status.delivered { background: rgba(255,152,0,.2); color: var(--orange); }
+        .order-card .order-status.cancelled { background: rgba(244,67,54,.2); color: var(--red); }
+        .order-card .order-items {
+            font-size: 12px;
+            color: var(--hint);
+            margin-top: 4px;
+        }
+        .order-card .order-actions {
+            margin-top: 8px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .order-card .order-actions button {
+            padding: 4px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all .2s;
+        }
+        .order-card .order-actions button:active { transform: scale(.95); }
+        
+        .empty {
+            text-align: center;
+            padding: 40px 0;
+            color: var(--hint);
+        }
+        
+        /* ========== АДАПТАЦИЯ ========== */
+        @media (max-width: 400px) {
+            .stats { grid-template-columns: 1fr 1fr; }
+            .product-card .top { flex-direction: column; }
+            .product-card .price { margin-top: 4px; }
+        }
+        @media (min-width: 600px) {
+            .product-card .top { flex-direction: row; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>💨 VAPEhyz shop</h1>
+        <p>Управление магазином</p>
+    </div>
+    
+    <div class="stats" id="stats"></div>
+    
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="products">📦 Товары</button>
+        <button class="tab-btn" data-tab="orders">📋 Заказы</button>
+    </div>
+    
+    <div class="tab-content active" id="tab-products">
+        <button class="btn-add" id="addProductBtn">➕ Добавить товар</button>
+        <div id="productsList"></div>
+    </div>
+    
+    <div class="tab-content" id="tab-orders">
+        <div id="ordersList"></div>
+    </div>
+    
+    <!-- ===== МОДАЛЬНОЕ ОКНО ===== -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Добавить товар</h2>
+            <input type="text" id="editName" placeholder="Название товара">
+            <input type="number" id="editPrice" placeholder="Цена">
+            <input type="text" id="editCategory" placeholder="Категория (ПОД-системы, Жидкости, Картриджи, HQD)">
+            <input type="text" id="editSubcategory" placeholder="Подкатегория (pod, liquid, cartridge, hqd)">
+            <textarea id="editDescription" placeholder="Описание"></textarea>
+            
+            <div class="file-input-wrapper">
+                <input type="file" id="editImageInput" accept="image/*">
+                <div class="file-label" id="fileLabel">📸 Нажмите для выбора фото</div>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="save-btn" id="saveProductBtn">✅ Сохранить</button>
+                <button class="cancel-btn" id="closeModalBtn">❌ Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (() => {
+            const tg = window.Telegram.WebApp;
+            tg.ready();
+            tg.expand();
+            
+            // ================= DOM-ЭЛЕМЕНТЫ =================
+            const $ = id => document.getElementById(id);
+            const statsEl = $('stats');
+            const productsList = $('productsList');
+            const ordersList = $('ordersList');
+            const modal = $('modal');
+            const modalTitle = $('modalTitle');
+            const fileLabel = $('fileLabel');
+            const fileInput = $('editImageInput');
+            
+            let editingId = null;
+            let selectedFile = null;
+            
+            // ================= ПРЕДПРОСМОТР ФОТО =================
+            fileInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    selectedFile = this.files[0];
+                    const reader = new FileReader();
+                    reader.onload = e => {
+                        fileLabel.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                        fileLabel.classList.add('has-file');
+                    };
+                    reader.readAsDataURL(selectedFile);
+                }
+            });
+            
+            // ================= API ЗАПРОСЫ =================
+            async function apiRequest(action, data = {}) {
+                try {
+                    const res = await fetch('/api/admin', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action, ...data })
+                    });
+                    return await res.json();
+                } catch (e) {
+                    console.error('API Error:', e);
+                    return null;
+                }
+            }
+            
+            // ================= ЗАГРУЗКА ДАННЫХ =================
+            async function loadProducts() {
+                const data = await apiRequest('get_products');
+                if (data) { renderProducts(data); return data; }
+                return [];
+            }
+            
+            async function loadOrders() {
+                const data = await apiRequest('get_orders');
+                if (data) { renderOrders(data); return data; }
+                return [];
+            }
+            
+            // ================= ОТРИСОВКА ТОВАРОВ =================
+            function renderProducts(products) {
+                if (!products || !products.length) {
+                    productsList.innerHTML = '<div class="empty">📭 Товаров пока нет</div>';
+                    updateStats(0);
+                    return;
+                }
+                
+                productsList.innerHTML = products.map(p => {
+                    const variants = p.variants || [];
+                    const hasPhoto = p.image && p.image !== '/product_images/default.png';
+                    
+                    return `
+                    <div class="product-card" data-id="${p.id}">
+                        <div class="top">
+                            <div>
+                                <div class="name">${p.name}</div>
+                                <div class="desc">${p.description || ''}</div>
+                                <div style="font-size:12px;color:var(--hint);">
+                                    ${p.category} → ${p.subcategory} | ID: ${p.id}
+                                </div>
+                                ${hasPhoto ? `<img src="${p.image}" class="preview-img" alt="">` : ''}
+                            </div>
+                            <div class="price">${p.price} ₽</div>
+                        </div>
+                        <div class="available-badge ${p.available ? 'in-stock' : 'out-of-stock'}">
+                            ${p.available ? '✅ В наличии' : '❌ Нет в наличии'}
+                            ${variants.length ? ` | 📌 ${variants.length} вариантов` : ''}
+                        </div>
+                        
+                        <div class="variants-section">
+                            <div class="variant-title">📌 Варианты:</div>
+                            ${!variants.length ? '<div style="font-size:12px;color:var(--hint);">Нет вариантов</div>' : ''}
+                            ${variants.map((v, idx) => `
+                                <div class="variant-item">
+                                    <span>${v.name} — ${v.price} ₽</span>
+                                    <button class="remove-variant" data-id="${p.id}" data-idx="${idx}">✕</button>
+                                </div>
+                            `).join('')}
+                            <div class="add-variant-form">
+                                <input type="text" id="variantName_${p.id}" placeholder="Название">
+                                <input type="number" id="variantPrice_${p.id}" placeholder="Цена" style="max-width:80px;">
+                                <button data-id="${p.id}">➕ Добавить</button>
+                            </div>
+                        </div>
+                        
+                        <div class="actions">
+                            <button class="btn-toggle" data-id="${p.id}">
+                                ${p.available ? '🔴 Снять с продажи' : '🟢 В продажу'}
+                            </button>
+                            <button class="btn-edit" data-id="${p.id}">✏️ Редактировать</button>
+                            <button class="btn-delete" data-id="${p.id}">🗑️ Удалить</button>
+                        </div>
+                    </div>
+                `}).join('');
+                
+                // ================= СОБЫТИЯ ТОВАРОВ =================
+                document.querySelectorAll('.remove-variant').forEach(btn => {
+                    btn.addEventListener('click', () => deleteVariant(+btn.dataset.id, +btn.dataset.idx));
+                });
+                
+                document.querySelectorAll('.add-variant-form button').forEach(btn => {
+                    btn.addEventListener('click', () => addVariant(+btn.dataset.id));
+                });
+                
+                document.querySelectorAll('.btn-toggle').forEach(btn => {
+                    btn.addEventListener('click', () => toggleProduct(+btn.dataset.id));
+                });
+                
+                document.querySelectorAll('.btn-edit').forEach(btn => {
+                    btn.addEventListener('click', () => editProduct(+btn.dataset.id));
+                });
+                
+                document.querySelectorAll('.btn-delete').forEach(btn => {
+                    btn.addEventListener('click', () => deleteProduct(+btn.dataset.id));
+                });
+                
+                updateStats(products.length);
+            }
+            
+            // ================= ОТРИСОВКА ЗАКАЗОВ =================
+            function renderOrders(orders) {
+                if (!orders || !orders.length) {
+                    ordersList.innerHTML = '<div class="empty">📭 Заказов пока нет</div>';
+                    return;
+                }
+                
+                ordersList.innerHTML = orders.slice().reverse().map(o => `
+                    <div class="order-card">
+                        <div class="order-top">
+                            <div>
+                                <div class="order-user">👤 ${o.user_name}</div>
+                                <div style="font-size:12px;color:var(--hint);">
+                                    ${o.created_at ? o.created_at.replace('T', ' ').slice(0, 16) : ''}
+                                </div>
+                            </div>
+                            <div>
+                                <span class="order-status ${o.status === 'Новый' ? 'new' : o.status === 'Подтверждён' ? 'confirmed' : o.status === 'Доставлен' ? 'delivered' : 'cancelled'}">
+                                    ${o.status || 'Новый'}
+                                </span>
+                                <div class="order-total">${o.total} ₽</div>
+                            </div>
+                        </div>
+                        <div class="order-items">${o.items.map(i => `${i.name} x${i.quantity}`).join(', ')}</div>
+                        <div class="order-actions">
+                            <button data-id="${o.id}" data-status="Подтверждён" style="background:var(--green);color:#fff;">✅ Подтвердить</button>
+                            <button data-id="${o.id}" data-status="Доставлен" style="background:var(--orange);color:#fff;">🚚 Доставлен</button>
+                            <button data-id="${o.id}" data-status="Отменён" style="background:var(--red);color:#fff;">❌ Отменить</button>
+                            <button data-id="${o.id}" style="background:var(--red);color:#fff;font-weight:600;">🗑️ Удалить</button>
+                        </div>
+                    </div>
+                `).join('');
+                
+                document.querySelectorAll('.order-actions button').forEach(btn => {
+                    const status = btn.dataset.status;
+                    if (status) {
+                        btn.addEventListener('click', () => updateOrderStatus(+btn.dataset.id, status));
+                    } else {
+                        btn.addEventListener('click', () => deleteOrder(+btn.dataset.id));
+                    }
+                });
+            }
+            
+            // ================= СТАТИСТИКА =================
+            function updateStats(productCount) {
+                loadOrders().then(orders => {
+                    const totalOrders = orders ? orders.length : 0;
+                    const revenue = orders ? orders.reduce((s, o) => s + o.total, 0) : 0;
+                    statsEl.innerHTML = `
+                        <div class="stat-card"><div class="number">${productCount}</div><div class="label">Товаров</div></div>
+                        <div class="stat-card"><div class="number">${totalOrders}</div><div class="label">Заказов</div></div>
+                        <div class="stat-card"><div class="number">${revenue} ₽</div><div class="label">Выручка</div></div>
+                    `;
+                });
+            }
+            
+            // ================= ДЕЙСТВИЯ С ВАРИАНТАМИ =================
+            async function addVariant(productId) {
+                const nameInput = $(`variantName_${productId}`);
+                const priceInput = $(`variantPrice_${productId}`);
+                const name = nameInput.value.trim();
+                const price = parseInt(priceInput.value);
+                
+                if (!name || !price) {
+                    tg.showAlert('❌ Введите название и цену варианта!');
+                    return;
+                }
+                
+                await apiRequest('add_variant', { product_id: productId, variant: { name, price } });
+                nameInput.value = '';
+                priceInput.value = '';
+                loadProducts();
+                tg.HapticFeedback.impactOccurred('light');
+                tg.showAlert('✅ Вариант добавлен!');
+            }
+            
+            async function deleteVariant(productId, index) {
+                if (!confirm('Удалить этот вариант?')) return;
+                await apiRequest('delete_variant', { product_id: productId, variant_index: index });
+                loadProducts();
+                tg.HapticFeedback.impactOccurred('light');
+            }
+            
+            // ================= ДЕЙСТВИЯ С ТОВАРАМИ =================
+            async function toggleProduct(id) {
+                await apiRequest('toggle_product', { id });
+                loadProducts();
+                tg.HapticFeedback.impactOccurred('light');
+            }
+            
+            async function deleteProduct(id) {
+                if (!confirm('Удалить товар?')) return;
+                await apiRequest('delete_product', { id });
+                loadProducts();
+                tg.HapticFeedback.impactOccurred('light');
+            }
+            
+            function editProduct(id) {
+                loadProducts().then(products => {
+                    const p = products.find(x => x.id === id);
+                    if (!p) return;
+                    editingId = id;
+                    modalTitle.textContent = '✏️ Редактировать товар';
+                    $('editName').value = p.name || '';
+                    $('editPrice').value = p.price || '';
+                    $('editCategory').value = p.category || '';
+                    $('editSubcategory').value = p.subcategory || '';
+                    $('editDescription').value = p.description || '';
+                    fileLabel.innerHTML = '📸 Нажмите для выбора нового фото';
+                    fileLabel.classList.remove('has-file');
+                    selectedFile = null;
+                    fileInput.value = '';
+                    modal.style.display = 'block';
+                });
+            }
+            
+            function showAddModal() {
+                editingId = null;
+                modalTitle.textContent = '➕ Добавить товар';
+                $('editName').value = '';
+                $('editPrice').value = '';
+                $('editCategory').value = '';
+                $('editSubcategory').value = '';
+                $('editDescription').value = '';
+                fileLabel.innerHTML = '📸 Нажмите для выбора фото';
+                fileLabel.classList.remove('has-file');
+                selectedFile = null;
+                fileInput.value = '';
+                modal.style.display = 'block';
+            }
+            
+            function closeModal() {
+                modal.style.display = 'none';
+            }
+            
+            async function saveProduct() {
+                const product = {
+                    id: editingId,
+                    name: $('editName').value.trim(),
+                    price: parseInt($('editPrice').value),
+                    category: $('editCategory').value.trim(),
+                    subcategory: $('editSubcategory').value.trim(),
+                    description: $('editDescription').value.trim(),
+                    available: true,
+                    variants: []
+                };
+                
+                if (!product.name || !product.price) {
+                    tg.showAlert('❌ Заполните название и цену!');
+                    return;
+                }
+                
+                const action = editingId ? 'update_product' : 'add_product';
+                
+                if (selectedFile) {
+                    const formData = new FormData();
+                    formData.append('action', action);
+                    formData.append('product', JSON.stringify(product));
+                    formData.append('image', selectedFile);
+                    
+                    try {
+                        const res = await fetch('/api/admin', { method: 'POST', body: formData });
+                        const result = await res.json();
+                        if (result.status === 'success') {
+                            closeModal();
+                            loadProducts();
+                            tg.HapticFeedback.impactOccurred('light');
+                            tg.showAlert('✅ Товар сохранён!');
+                        } else {
+                            tg.showAlert('❌ Ошибка сохранения!');
+                        }
+                    } catch {
+                        tg.showAlert('❌ Ошибка соединения!');
+                    }
+                } else {
+                    const result = await apiRequest(action, { product });
+                    if (result?.status === 'success') {
+                        closeModal();
+                        loadProducts();
+                        tg.HapticFeedback.impactOccurred('light');
+                        tg.showAlert('✅ Товар сохранён!');
+                    } else {
+                        tg.showAlert('❌ Ошибка сохранения!');
+                    }
+                }
+            }
+            
+            // ================= ДЕЙСТВИЯ С ЗАКАЗАМИ =================
+            async function updateOrderStatus(id, status) {
+                await apiRequest('update_order_status', { id, status });
+                loadOrders();
+                tg.HapticFeedback.impactOccurred('light');
+            }
+            
+            async function deleteOrder(orderId) {
+                if (!confirm('🗑️ Удалить этот заказ навсегда?')) return;
+                const result = await apiRequest('delete_order', { id: orderId });
+                if (result?.status === 'success') {
+                    loadOrders();
+                    tg.HapticFeedback.impactOccurred('light');
+                    tg.showAlert('🗑️ Заказ удалён!');
+                } else {
+                    tg.showAlert('❌ Ошибка удаления!');
+                }
+            }
+            
+            // ================= ВКЛАДКИ =================
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+                    $(`tab-${btn.dataset.tab}`).classList.add('active');
+                    if (btn.dataset.tab === 'orders') loadOrders();
+                    if (btn.dataset.tab === 'products') loadProducts();
+                });
+            });
+            
+            // ================= СОБЫТИЯ =================
+            $('addProductBtn').addEventListener('click', showAddModal);
+            $('saveProductBtn').addEventListener('click', saveProduct);
+            $('closeModalBtn').addEventListener('click', closeModal);
+            modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+            
+            tg.BackButton.onClick(() => tg.close());
+            
+            // ================= ЗАПУСК =================
+            loadProducts();
+        })();
+    </script>
+</body>
+</html>

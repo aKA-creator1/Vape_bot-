@@ -1,0 +1,158 @@
+[
+  {
+    "id": 1,
+    "user_id": 8300980429,
+    "user_name": "Настя",
+    "username": "Nastya0126",
+    "items": [
+      {
+        "id": 9,
+        "name": "Elf Bar — банан",
+        "price": 1300,
+        "category": "HQD",
+        "subcategory": "HQD",
+        "description": "hqd одноразка",
+        "image": "/product_images/1787167147.165156_IMG_4218.jpeg",
+        "available": true,
+        "parent_id": 9,
+        "is_variant": true,
+        "variants": [
+          {
+            "name": "клубника",
+            "price": 1300,
+            "fullName": "Elf Bar — клубника"
+          },
+          {
+            "name": "банан",
+            "price": 1300,
+            "fullName": "Elf Bar — банан"
+          },
+          {
+            "name": "манго",
+            "price": 1300,
+            "fullName": "Elf Bar — манго"
+          }
+        ],
+        "has_variants": true,
+        "created_at": "2026-08-20T03:19:07.243842",
+        "quantity": 1
+      },
+      {
+        "id": 7,
+        "name": "Злой монах — манго",
+        "price": 500,
+        "category": "Жидкости",
+        "subcategory": "Жидкости",
+        "description": "жидкости для вейп испарителей 70Мг",
+        "image": "/product_images/1787166575.121088_IMG_4217.jpeg",
+        "available": true,
+        "parent_id": 7,
+        "is_variant": true,
+        "variants": [
+          {
+            "name": "банан",
+            "price": 500,
+            "fullName": "Злой монах — банан"
+          },
+          {
+            "name": "манго",
+            "price": 500,
+            "fullName": "Злой монах — манго"
+          }
+        ],
+        "has_variants": true,
+        "created_at": "2026-08-20T03:00:00",
+        "quantity": 2
+      }
+    ],
+    "total": 2300,
+    "status": "Отменён",
+    "created_at": "2026-08-21T12:02:16.964635"
+  },
+  {
+    "id": 2,
+    "user_id": 5973938890,
+    "user_name": "Дима",
+    "username": "Toxin_TOP",
+    "items": [
+      {
+        "id": 10,
+        "name": "Картридж — 0.4 Ом",
+        "price": 250,
+        "category": "Картриджи",
+        "subcategory": "Картриджи",
+        "description": "Картриджи для многоразового использования",
+        "image": "/product_images/1787232447.984946_IMG_4230.webp",
+        "available": true,
+        "parent_id": 10,
+        "is_variant": true,
+        "variants": [
+          {
+            "name": "0.4 Ом",
+            "price": 250,
+            "fullName": "Картридж — 0.4 Ом"
+          },
+          {
+            "name": "0.6 Ом",
+            "price": 250,
+            "fullName": "Картридж — 0.6 Ом"
+          },
+          {
+            "name": "0.8 Ом",
+            "price": 350,
+            "fullName": "Картридж — 0.8 Ом"
+          }
+        ],
+        "has_variants": true,
+        "created_at": "2026-08-20T03:00:00",
+        "quantity": 1
+      }
+    ],
+    "total": 250,
+    "status": "Отменён",
+    "created_at": "2026-08-21T13:29:02.584067"
+  },
+  {
+    "id": 3,
+    "user_id": 6665950252,
+    "user_name": "🌿🚬",
+    "username": "Psevdo_nn",
+    "items": [
+      {
+        "id": 10,
+        "name": "Картридж — 0.8 Ом",
+        "price": 350,
+        "category": "Картриджи",
+        "subcategory": "Картриджи",
+        "description": "Картриджи для многоразового использования",
+        "image": "/product_images/1787232447.984946_IMG_4230.webp",
+        "available": true,
+        "parent_id": 10,
+        "is_variant": true,
+        "variants": [
+          {
+            "name": "0.4 Ом",
+            "price": 250,
+            "fullName": "Картридж — 0.4 Ом"
+          },
+          {
+            "name": "0.6 Ом",
+            "price": 250,
+            "fullName": "Картридж — 0.6 Ом"
+          },
+          {
+            "name": "0.8 Ом",
+            "price": 350,
+            "fullName": "Картридж — 0.8 Ом"
+          }
+        ],
+        "has_variants": true,
+        "created_at": "2026-08-20T03:00:00",
+        "quantity": 1
+      }
+    ],
+    "total": 350,
+    "status": "Отменён",
+    "created_at": "2026-08-24T13:50:02.528440"
+  }
+]

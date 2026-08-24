@@ -1,0 +1,98 @@
+[
+  {
+    "id": 7,
+    "name": "Злой монах",
+    "price": 500,
+    "category": "Жидкости",
+    "subcategory": "Жидкости",
+    "description": "жидкости для вейп испарителей 70Мг",
+    "available": true,
+    "variants": [
+      {
+        "name": "банан",
+        "price": 500
+      },
+      {
+        "name": "манго",
+        "price": 500
+      }
+    ],
+    "image": "/product_images/1787166575.121088_IMG_4217.jpeg",
+    "created_at": "2026-08-20T03:00:00"
+  },
+  {
+    "id": 8,
+    "name": "Xros 3",
+    "price": 1800,
+    "category": "ПОД-системы",
+    "subcategory": "ПОД-системы",
+    "description": "под система х-ros",
+    "available": true,
+    "variants": [
+      {
+        "name": "синий",
+        "price": 1800
+      },
+      {
+        "name": "серый",
+        "price": 1800
+      },
+      {
+        "name": "розовый",
+        "price": 1800
+      }
+    ],
+    "image": "/product_images/1787167050.103349_IMG_4216.jpeg",
+    "created_at": "2026-08-20T03:00:00"
+  },
+  {
+    "id": 9,
+    "name": "Elf Bar",
+    "price": 1300,
+    "category": "HQD",
+    "subcategory": "HQD",
+    "description": "hqd одноразка",
+    "available": true,
+    "variants": [
+      {
+        "name": "клубника",
+        "price": 1300
+      },
+      {
+        "name": "банан",
+        "price": 1300
+      },
+      {
+        "name": "манго",
+        "price": 1300
+      }
+    ],
+    "image": "/product_images/1787167147.165156_IMG_4218.jpeg",
+    "created_at": "2026-08-20T03:19:07.243842"
+  },
+  {
+    "id": 10,
+    "name": "Картридж",
+    "price": 250,
+    "category": "Картриджи",
+    "subcategory": "Картриджи",
+    "description": "Картриджи для многоразового использования",
+    "available": true,
+    "variants": [
+      {
+        "name": "0.4 Ом",
+        "price": 250
+      },
+      {
+        "name": "0.6 Ом",
+        "price": 250
+      },
+      {
+        "name": "0.8 Ом",
+        "price": 350
+      }
+    ],
+    "image": "/product_images/1787232447.984946_IMG_4230.webp",
+    "created_at": "2026-08-20T03:00:00"
+  }
+]
